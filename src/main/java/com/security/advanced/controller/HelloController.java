@@ -17,14 +17,10 @@ public class HelloController {
 		return ResponseEntity.ok("Hello from /");
 	}
 	
-	@GetMapping("/hello")
+	@GetMapping("/secured-hello")
 	public ResponseEntity<?> sayHello2() {
-		return ResponseEntity.ok("Hello from /hello");
+		return ResponseEntity.ok("Hello from /secured-hello");
 	}
 	
-	@GetMapping("/hello3")
-	public ResponseEntity<?> sayHello3() {
-		return ResponseEntity.ok("Hello from /hello3");
-	}
 	
 }
