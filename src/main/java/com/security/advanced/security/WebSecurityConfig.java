@@ -7,10 +7,13 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.security.advanced.service.LogoutService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,11 +23,10 @@ import lombok.RequiredArgsConstructor;
 public class WebSecurityConfig {
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 	private final CustomUserDetailService customUserDetailService;
+	private final LogoutService logoutService;
 	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); //run jwtAuthenticationFilter before UsernamePasswordAuthenticationFilter
-		
 		httpSecurity
 			.cors().disable()
 			.csrf().disable()
@@ -39,8 +41,12 @@ public class WebSecurityConfig {
 					).permitAll()
 					.requestMatchers("/api/v1/hello/admin").hasAuthority("ADMIN")
 					.anyRequest().authenticated()
-			);
-		
+			).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) //run jwtAuthenticationFilter before UsernamePasswordAuthenticationFilter
+			.logout()
+			.logoutUrl("/api/v1/auth/logout")
+			.addLogoutHandler(logoutService)
+			.logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext());
+			
 		return httpSecurity.build();
 	}
 	
