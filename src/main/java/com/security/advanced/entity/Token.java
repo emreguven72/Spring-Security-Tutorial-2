@@ -1,13 +1,14 @@
 package com.security.advanced.entity;
 
-import java.util.List;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,24 +22,29 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users")
-public class User {
+@Table(name = "tokens")
+public class Token {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
 	
-	@Column(name = "email")
-	private String email;
+	@Column(name = "token")
+	private String token;
 	
-	@Column(name = "password")
-	private String password;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "token_type")
+	private TokenType tokenType;
 	
-	@Column(name = "role")
-	private String role;
+	@Column(name = "expired")
+	private boolean expired;
 	
-	@OneToMany(mappedBy = "user")
-	private List<Token> tokens;
+	@Column(name = "revoked")
+	private boolean revoked;
 	
+	@ManyToOne()
+	@JoinColumn(name = "user_id")
+	private User user;
+
 }

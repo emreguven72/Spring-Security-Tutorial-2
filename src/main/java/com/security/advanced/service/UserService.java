@@ -9,5 +9,5 @@ public interface UserService {
 	
 	boolean existsByEmail(String email);
 	
-	void create(User user);
+	User create(User user);
 }

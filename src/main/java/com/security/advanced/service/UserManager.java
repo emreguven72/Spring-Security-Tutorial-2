@@ -27,11 +27,11 @@ public class UserManager implements UserService{
 	}
 
 	@Override
-	public void create(User user) {
+	public User create(User user) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		userRepository.save(user);
+		return userRepository.save(user);
 	}
 
 }
