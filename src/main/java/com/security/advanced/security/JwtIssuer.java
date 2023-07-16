@@ -22,7 +22,7 @@ public class JwtIssuer {
 				
 		return JWT.create()
 				.withSubject(String.valueOf(id))
-				.withExpiresAt(Instant.now().plus(Duration.of(1, ChronoUnit.DAYS))) //it will expires in 1 day
+				.withExpiresAt(Instant.now().plus(Duration.of(15, ChronoUnit.DAYS))) //it will expires in 1 day
 				.withClaim("email", email)
 				.withClaim("authorities", roles)
 				.sign(Algorithm.HMAC256(token));

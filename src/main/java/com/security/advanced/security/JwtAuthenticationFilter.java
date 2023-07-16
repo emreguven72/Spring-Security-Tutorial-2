@@ -18,10 +18,12 @@ import lombok.RequiredArgsConstructor;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private final JwtDecoder jwtDecoder;
 	private final JwtToPrincipalConverter jwtToPrincipalConverter;
+	private final JwtValidationChecker jwtValidationChecker;
 	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 		extractTokenFromRequest(request)
+			.map(jwtValidationChecker::checkIfTokenValid)
 			.map(jwtDecoder::decode) //jwtDecoder::decode = token -> jwtDecoder.decode(token)
 			.map(jwtToPrincipalConverter::convert)
 			.map(UserPrincipalAuthenticationToken::new)

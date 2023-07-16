@@ -1,7 +1,6 @@
 package com.security.advanced.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

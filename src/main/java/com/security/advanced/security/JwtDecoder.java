@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 public class JwtDecoder {
 	private final JwtProperties jwtProperties;
 	
-	public DecodedJWT decode(String token) {		
+	public DecodedJWT decode(String token) {	
 		return JWT.require(Algorithm.HMAC256(this.jwtProperties.getSECRET_KEY()))
 					.build()
 					.verify(token);
