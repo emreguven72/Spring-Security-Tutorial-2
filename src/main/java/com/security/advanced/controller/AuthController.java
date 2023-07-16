@@ -17,6 +17,7 @@ import com.security.advanced.model.LoginRequest;
 import com.security.advanced.model.LoginResponse;
 import com.security.advanced.security.JwtIssuer;
 import com.security.advanced.security.UserPrincipal;
+import com.security.advanced.service.AuthService;
 import com.security.advanced.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -26,28 +27,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController {
 	private final UserService userService;
-	private final JwtIssuer jwtIssuer;
-	private final AuthenticationManager authenticationManager;
-
+	private final AuthService authService;
+	
 	@PostMapping("/authenticate")
 	public LoginResponse login(@RequestBody @Validated LoginRequest loginRequest) {
-		var authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
-		); //if credentials are invalid the code will fail here
-		
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		
-		var principal = (UserPrincipal) authentication.getPrincipal();
-		
-		var roles = principal.getAuthorities().stream()
-				.map(GrantedAuthority::getAuthority)
-				.toList();
-		
-		var token = this.jwtIssuer.issue(principal.getId(), principal.getEmail(), roles);
-		
-		return LoginResponse.builder()
-				.accessToken(token)
-				.build();
+		return authService.attemptLogin(loginRequest.getEmail(), loginRequest.getPassword());
 	}
 	
 	@PostMapping("/register")

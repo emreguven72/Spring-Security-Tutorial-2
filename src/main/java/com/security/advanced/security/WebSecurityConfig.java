@@ -37,6 +37,7 @@ public class WebSecurityConfig {
 							"/api/v1/auth/authenticate",
 							"/api/v1/auth/register"
 					).permitAll()
+					.requestMatchers("/api/v1/hello/admin").hasAuthority("ADMIN")
 					.anyRequest().authenticated()
 			);
 		
